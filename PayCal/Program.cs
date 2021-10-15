@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PayCal_Refector_Temp
+namespace PayCal
 {
     class Program
     {

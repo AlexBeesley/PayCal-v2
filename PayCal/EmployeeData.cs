@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-public class EmployeeData
+﻿public class EmployeeData
 {
     public int EmployeeID { get; set; }
     public string FName { get; set; }
@@ -19,24 +17,5 @@ public class EmployeeData
     public override int GetHashCode()
     {
         return EmployeeID;
-    }
-
-    public object GetFName()
-    {
-        return FName;
-    }
-
-    public override bool Equals(object obj)
-    {
-        if (obj == null) return false;
-        EmployeeData objAsPart = obj as EmployeeData;
-        if (objAsPart == null) return false;
-        else return Equals(objAsPart);
-    }
-
-    public bool Equals(EmployeeData other)
-    {
-        if (other == null) return false;
-        return (this.EmployeeID.Equals(other.EmployeeID));
     }
 }
