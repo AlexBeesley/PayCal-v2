@@ -74,5 +74,20 @@ namespace PayCal___Tests
             // Act + Assert
             Assert.Null(sut.WeeksWorkedint);
         }
+
+        [Test]
+        public void Check_method_ToString_returns_expected_string()
+        {
+            // Arrange
+            var sut = new EmployeeData();
+            var re = new Repository();
+
+            // Act
+            re.Create(4, "Alex", "Beesley", true, 23000, 3000, null, null);
+            var x = sut.ToString();
+
+            // Assert
+            Assert.That(re.Read(3).ToString, Is.EqualTo("\nID: 4  Name: Alex Beesley Is Employment Permanent: True Salary: £23000 Bonus: £3000 Day Rate: £ Weeks Worked: "));
+        }
     }
 }
