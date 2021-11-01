@@ -12,10 +12,10 @@ namespace PayCal___Tests
             var sut = new Repository();
 
             // Act
-            sut.Create("Alex", "Beesley", true, 23000, 400, null, null);
+            sut.Create(4, "Alex", "Beesley", true, 23000, 3000, null, null);
 
             // Assert
-            Assert.That(sut.myEmployeeData, Is.Unique);
+            Assert.That(sut.Read(3).FName, Is.EqualTo("Alex"));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace PayCal___Tests
             var x = sut.ReadAll();
 
             // Assert
-            Assert.That(x, Is.Not.Null);
+            Assert.That(string.Concat(x).Split("ID").Length, Is.EqualTo(4));
         }
 
         [Test]
@@ -42,28 +42,7 @@ namespace PayCal___Tests
             var x = sut.Read(employeeID);
 
             // Assert
-            Assert.That(x, Is.Not.Null);
-        }
-
-        [Test]
-        public void Check_ReadValues_method_returns_correct_values()
-        {
-            // Arrange
-            var sut = new Repository();
-            int employeeID = 1;
-            string[] fields = { "FName", "LName", "isPermanent", "Salary", "Bonus", "DayRate", "WeeksWorked" };
-
-            for (int i = 0; i < 6; i++)
-            {
-                // Act
-                var x = sut.ReadValues(employeeID, fields[i]);
-                
-                // Assert
-                if (i == 0 || i == 1) { Assert.IsInstanceOf(typeof(string), x); }
-                if (i == 2) { Assert.IsInstanceOf(typeof(bool), x); }
-                if (i == 3 || i == 4) { Assert.IsInstanceOf(typeof(int), x); }
-                if (i == 5 || i == 6) { Assert.Null(x); }
-            }
+            Assert.That(x.isPermanent, Is.EqualTo(true));
         }
 
         [Test]

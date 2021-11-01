@@ -11,7 +11,7 @@
 
     public override string ToString()
     {
-        return $"ID: {EmployeeID}  Name: {FName} {LName} Is Employment Permanent: {isPermanent} Salary: {Salaryint} Bonus: {Bonusint} Day Rate: {DayRateint} Weeks Worked: {WeeksWorkedint}";
+        return $"\nID: {EmployeeID}  Name: {FName} {LName} Is Employment Permanent: {isPermanent} Salary: £{Salaryint} Bonus: £{Bonusint} Day Rate: £{DayRateint} Weeks Worked: {WeeksWorkedint}";
     }
 
     public override int GetHashCode()
