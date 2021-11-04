@@ -12,10 +12,11 @@ namespace PayCal___Tests
             var sut = new Repository();
 
             // Act
-            sut.Create(4, "Alex", "Beesley", true, 23000, 3000, null, null);
+            sut.Create("Alex", "Beesley", true, 23000, 3000, null, null);
+            int x = sut.GetIDfromIndex(3);
 
             // Assert
-            Assert.That(sut.Read(3).FName, Is.EqualTo("Alex"));
+            Assert.That(sut.Read(x).FName, Is.EqualTo("Alex"));
         }
 
         [Test]
@@ -36,10 +37,9 @@ namespace PayCal___Tests
         {
             // Arrange
             var sut = new Repository();
-            int employeeID = 1;
 
             // Act
-            var x = sut.Read(employeeID);
+            var x = sut.Read(sut.GetIDfromIndex(0));
 
             // Assert
             Assert.That(x.isPermanent, Is.EqualTo(true));
@@ -50,7 +50,7 @@ namespace PayCal___Tests
         {
             // Arrange
             var sut = new Repository();
-            int employeeID = 1;
+            int employeeID = sut.GetIDfromIndex(1);
 
             // Act
             var x = sut.Delete(employeeID);

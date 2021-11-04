@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Repository
 {
+    static Random rnd = new Random();
     private List<EmployeeData> myEmployeeData = new List<EmployeeData>()
     {
         new EmployeeData()
         {
-            EmployeeID = 1,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "Joe",
             LName = "Bloggs",
             isPermanent = true,
@@ -19,7 +21,7 @@ public class Repository
 
         new EmployeeData()
         {
-            EmployeeID = 2,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "John",
             LName = "Smith",
             isPermanent = true,
@@ -31,7 +33,7 @@ public class Repository
 
         new EmployeeData()
         {
-            EmployeeID = 3,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "Clare",
             LName = "Jones",
             isPermanent = false,
@@ -42,11 +44,11 @@ public class Repository
         }
     };
 
-    public EmployeeData Create(int IDcount, string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
+    public EmployeeData Create(string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
     {
         var createEmployee = new EmployeeData()
         {
-            EmployeeID = IDcount,
+            EmployeeID = rnd.Next(1000, 9999),
             FName = fname,
             LName = lname,
             isPermanent = isPerm,
@@ -64,9 +66,20 @@ public class Repository
         return (myEmployeeData);
     }
 
+    public int GetIDfromIndex(int employeeID)
+    {
+        return myEmployeeData[employeeID].EmployeeID;
+    }
+
     public EmployeeData Read(int employeeID)
     {
-        return myEmployeeData[employeeID];
+        EmployeeData employee = myEmployeeData.First(e => e.EmployeeID == employeeID);
+        return employee;
+    }
+
+    public int Count()
+    {
+        return myEmployeeData.Count;
     }
 
     public EmployeeData Update(int employeeID, string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
@@ -84,8 +97,8 @@ public class Repository
 
     public bool Delete(int employeeID)
     {
-        myEmployeeData.RemoveAt(employeeID);
-        return true;
-        // add error handling
+        EmployeeData employee = myEmployeeData.FirstOrDefault(e => e.EmployeeID == employeeID);
+        if (myEmployeeData.Remove(employee)) { return true; }
+        else { return false; }        
     }
 }

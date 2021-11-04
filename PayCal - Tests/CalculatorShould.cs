@@ -14,7 +14,7 @@ namespace PayCal___Tests
             double pay = 6986;
 
             // Act
-            var x = sut.CalculateEmployeePay(1);
+            var x = sut.CalculateEmployeePay(re.GetIDfromIndex(1));
 
             // Assert
             Assert.That(x, Is.EqualTo(pay));

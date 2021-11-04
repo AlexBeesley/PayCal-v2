@@ -10,7 +10,6 @@ namespace PayCal
             EmployeeData ed = new EmployeeData();
             Calculator cal = new Calculator(re);
             int Output;
-            int IDcount = 3;
             string[] Fields = { "Enter First Name:  ", "Enter Surname:  ", "Enter Salary (if applicable):  £", "Enter Bonus (if applicable):  £",
                         "Enter Day Rate (if applicable):  £", "Enter Weeks Worked (if applicable):  " };
 
@@ -22,15 +21,19 @@ namespace PayCal
 Please Select from the following options:
 Display Employee Information --------------------------------------------------------------------------------- 1
 Add new Employee --------------------------------------------------------------------------------------------- 2
-Pay Calculator ----------------------------------------------------------------------------------------------- 3");
+Delete Employee ---------------------------------------------------------------------------------------------- 3
+Pay Calculator ----------------------------------------------------------------------------------------------- 4");
                 Console.Write(">>>  ");
                 string Selection = Console.ReadLine();
+
                 if (Selection == "1")
                 {
                     Console.Clear();
                     Console.WriteLine("EMPLOYEE INFORMATION\n");
                     Console.WriteLine(string.Concat(re.ReadAll()));
+                    Console.WriteLine($"Number of current Employees: {re.Count()}");
                 }
+
                 if (Selection == "2")
                 {
                     bool NELoopComplete = false;
@@ -124,8 +127,7 @@ Pay Calculator -----------------------------------------------------------------
                                 {
                                     commit = true;
                                     commitComplete = true;
-                                    IDcount++;
-                                    re.Create(IDcount, ed.FName, ed.LName, ed.isPermanent, ed.Salaryint, ed.Bonusint, ed.DayRateint, ed.WeeksWorkedint);
+                                    re.Create(ed.FName, ed.LName, ed.isPermanent, ed.Salaryint, ed.Bonusint, ed.DayRateint, ed.WeeksWorkedint);
                                 }
                                 if (confirm == "N" || confirm == "n")
                                 {
@@ -147,6 +149,31 @@ Pay Calculator -----------------------------------------------------------------
                     while (CalLoop == false)
                     {
                         Console.Clear();
+                        Console.WriteLine("DELETE EMPLOYEE\n");
+                        Console.WriteLine(string.Concat(re.ReadAll()));
+                        Console.Write("\nSelect ID of Employee to be deleted:  ");
+                        string Input = Console.ReadLine();
+                        bool valid = int.TryParse(Input, out Output);
+                        if (valid)
+                        {
+                            int selectedID = Output;
+                            bool x = re.Delete(selectedID);
+                            if (x)
+                            {
+                                Console.WriteLine(string.Concat(re.ReadAll()));
+                                Console.WriteLine($"Employee with ID: {selectedID} has been deleted.");
+                                CalLoop = true;
+                            }
+                        }
+                    }
+                }
+
+                if (Selection == "4")
+                {
+                    bool CalLoop = false;
+                    while (CalLoop == false)
+                    {
+                        Console.Clear();
                         Console.WriteLine("CALCULATE ANNUAL PAY\n");
                         Console.WriteLine(string.Concat(re.ReadAll()));
                         Console.Write("\nSelect ID of Employee:  ");
@@ -155,18 +182,9 @@ Pay Calculator -----------------------------------------------------------------
                         if (valid)
                         {
                             int selectedID = Output;
-                            selectedID = selectedID - 1;
-                            bool CheckID = (selectedID <= IDcount);
-                            if (CheckID)
-                            {
-                                Console.WriteLine("Employee Name:  " + re.Read(selectedID).FName + " " + re.Read(selectedID).LName);
-                                Console.WriteLine("Employment Type:  " + re.Read(selectedID).isPermanent);
-                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invaild ID.");
-                            }
+                            Console.WriteLine("Employee Name:  " + re.Read(selectedID).FName + " " + re.Read(selectedID).LName);
+                            Console.WriteLine("Employment Type:  " + re.Read(selectedID).isPermanent);
+                            Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
                         }
                         else
                         {

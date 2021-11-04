@@ -12,7 +12,7 @@
     public double CalculateEmployeePay(int employeeID)
 	{
 		bool EmploymentStatus = re.Read(employeeID).isPermanent;
-		if (EmploymentStatus == true) 
+		if (EmploymentStatus == true)
 		{ 
 			int Salary = (int)re.Read(employeeID).Salaryint;
 			int Bonus = (int)re.Read(employeeID).Bonusint;
