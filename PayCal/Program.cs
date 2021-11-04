@@ -1,45 +1,46 @@
 ﻿using System;
 
-namespace PayCal_Refector_Temp
+namespace PayCal
 {
     class Program
     {
-
         static void Main(string[] args)
         {
             Repository re = new Repository();
             EmployeeData ed = new EmployeeData();
-
-            Console.WriteLine(string.Concat(re.ReadAll()));
-
+            Calculator cal = new Calculator(re);
             int Output;
+            string[] Fields = { "Enter First Name:  ", "Enter Surname:  ", "Enter Salary (if applicable):  £", "Enter Bonus (if applicable):  £",
+                        "Enter Day Rate (if applicable):  £", "Enter Weeks Worked (if applicable):  " };
 
-            string[] Fields = { "Enter First Name:  ", "Enter Surname:  ", "Enter Salary (if applicable):  $", "Enter Bonus (if applicable):  $",
-                        "Enter Day Rate (if applicable):  $", "Enter Weeks Worked (if applicable):  " };
-
-            Console.WriteLine("\nWelcome to the PayCal System, a Salary Calculator.\n");
+            Console.WriteLine("Welcome to the PayCal System, a Salary Calculator.\n");
+            
             while (true)
             {
                 Console.WriteLine(@"
 Please Select from the following options:
 Display Employee Information --------------------------------------------------------------------------------- 1
 Add new Employee --------------------------------------------------------------------------------------------- 2
-Pay Calculator ----------------------------------------------------------------------------------------------- 3");
+Delete Employee ---------------------------------------------------------------------------------------------- 3
+Pay Calculator ----------------------------------------------------------------------------------------------- 4");
                 Console.Write(">>>  ");
                 string Selection = Console.ReadLine();
+
                 if (Selection == "1")
                 {
                     Console.Clear();
-                    Console.WriteLine("\nEMPLOYEE INFORMATION\n");
+                    Console.WriteLine("EMPLOYEE INFORMATION\n");
                     Console.WriteLine(string.Concat(re.ReadAll()));
+                    Console.WriteLine($"Number of current Employees: {re.Count()}");
                 }
+
                 if (Selection == "2")
                 {
                     bool NELoopComplete = false;
                     while (NELoopComplete == false)
                     {
                         Console.Clear();
-                        Console.WriteLine("\nNEW EMPLOYEE ENTRY\n");
+                        Console.WriteLine("NEW EMPLOYEE ENTRY\n");
                         Console.WriteLine(string.Concat(re.ReadAll()));
 
                         Console.Write(Fields[0]);
@@ -66,12 +67,10 @@ Pay Calculator -----------------------------------------------------------------
                                     {
                                         if (i == 2) //Salary
                                         {
-                                            Console.WriteLine("Vaild, Salary set to: $" + Output);
                                             ed.Salaryint = Output;
                                         }
                                         if (i == 3) //Bonus
                                         {
-                                            Console.WriteLine("Vaild, Bonus set to: $" + Output);
                                             ed.Bonusint = Output;
                                         }
                                         ed.DayRateint = null;
@@ -98,12 +97,10 @@ Pay Calculator -----------------------------------------------------------------
                                     {
                                         if (i == 4) //Day Rate
                                         {
-                                            Console.WriteLine("Vaild, Day Rate set to: $" + Output);
                                             ed.DayRateint = Output;
                                         }
                                         if (i == 5) //Weeks Worked
                                         {
-                                            Console.WriteLine("Vaild, Weeks Worked set to:  " + Output);
                                             ed.WeeksWorkedint = Output;
                                         }
                                         ed.Salaryint = null;
@@ -116,6 +113,7 @@ Pay Calculator -----------------------------------------------------------------
                                 }
                                 typeConvComplete = true;
                             }
+                            
                             Console.WriteLine($"Data to inject:  {ed.FName} / {ed.LName} / {ed.isPermanent} / {ed.Salaryint} / {ed.Bonusint} / {ed.DayRateint} / {ed.WeeksWorkedint}");
 
 
@@ -127,7 +125,6 @@ Pay Calculator -----------------------------------------------------------------
                                 string confirm = Console.ReadLine();
                                 if (confirm == "Y" || confirm == "y" || confirm == "")
                                 {
-                                    re.IDCount++;
                                     commit = true;
                                     commitComplete = true;
                                     re.Create(ed.FName, ed.LName, ed.isPermanent, ed.Salaryint, ed.Bonusint, ed.DayRateint, ed.WeeksWorkedint);
@@ -152,7 +149,32 @@ Pay Calculator -----------------------------------------------------------------
                     while (CalLoop == false)
                     {
                         Console.Clear();
-                        Console.WriteLine("\nCALCULATE ANNUAL PAY\n");
+                        Console.WriteLine("DELETE EMPLOYEE\n");
+                        Console.WriteLine(string.Concat(re.ReadAll()));
+                        Console.Write("\nSelect ID of Employee to be deleted:  ");
+                        string Input = Console.ReadLine();
+                        bool valid = int.TryParse(Input, out Output);
+                        if (valid)
+                        {
+                            int selectedID = Output;
+                            bool x = re.Delete(selectedID);
+                            if (x)
+                            {
+                                Console.WriteLine(string.Concat(re.ReadAll()));
+                                Console.WriteLine($"Employee with ID: {selectedID} has been deleted.");
+                                CalLoop = true;
+                            }
+                        }
+                    }
+                }
+
+                if (Selection == "4")
+                {
+                    bool CalLoop = false;
+                    while (CalLoop == false)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("CALCULATE ANNUAL PAY\n");
                         Console.WriteLine(string.Concat(re.ReadAll()));
                         Console.Write("\nSelect ID of Employee:  ");
                         string Input = Console.ReadLine();
@@ -160,41 +182,9 @@ Pay Calculator -----------------------------------------------------------------
                         if (valid)
                         {
                             int selectedID = Output;
-
-                            selectedID = selectedID - 1;
-
-                            object getFName = re.ReadValues(selectedID, "FName");
-                            object getLname = re.ReadValues(selectedID, "LName");
-                            object getEmploymentStatus = re.ReadValues(selectedID, "isPermanent");
-                            object getSalary = re.ReadValues(selectedID, "Salary");
-                            object getBonus = re.ReadValues(selectedID, "Bonus");
-                            object getDayRate = re.ReadValues(selectedID, "DayRate");
-                            object getWeeksWorked = re.ReadValues(selectedID, "WeeksWorked");
-
-                            bool CheckID = (selectedID <= re.IDCount);
-                            if (CheckID)
-                            {
-                                Console.WriteLine("Employee Name:  " + getFName + " " + getLname);
-                                if (Convert.ToBoolean(getEmploymentStatus) == true)
-                                {
-                                    int AnnualPay = Convert.ToInt32(getBonus) + Convert.ToInt32(getSalary);
-                                    Console.WriteLine("Salary is:  $" + getSalary);
-                                    Console.WriteLine("Bonus is:  $" + getBonus);
-                                    Console.WriteLine("Total Annual pay is:  $" + AnnualPay);
-                                }
-                                else
-                                {
-                                    int PartTimePay = Convert.ToInt32(getDayRate) * 5 * Convert.ToInt32(getWeeksWorked);
-                                    Console.WriteLine("DayRate is:  $" + getDayRate);
-                                    Console.WriteLine("Weeks Worked is:  " + getWeeksWorked);
-                                    Console.WriteLine("Total Annual pay is:  $" + PartTimePay);
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Invaild ID.");
-                            }
-
+                            Console.WriteLine("Employee Name:  " + re.Read(selectedID).FName + " " + re.Read(selectedID).LName);
+                            Console.WriteLine("Employment Type:  " + re.Read(selectedID).isPermanent);
+                            Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
                         }
                         else
                         {
@@ -202,8 +192,6 @@ Pay Calculator -----------------------------------------------------------------
                         }
                         CalLoop = true;
                     }
-
-
                 }
             }
         }

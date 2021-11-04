@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
 
 public class Repository
 {
-    public List<EmployeeData> myEmployeeData = new List<EmployeeData>()
+    static Random rnd = new Random();
+    private List<EmployeeData> myEmployeeData = new List<EmployeeData>()
     {
         new EmployeeData()
         {
-            EmployeeID = 1,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "Joe",
             LName = "Bloggs",
             isPermanent = true,
@@ -21,7 +21,7 @@ public class Repository
 
         new EmployeeData()
         {
-            EmployeeID = 2,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "John",
             LName = "Smith",
             isPermanent = true,
@@ -33,7 +33,7 @@ public class Repository
 
         new EmployeeData()
         {
-            EmployeeID = 3,
+            EmployeeID = rnd.Next(1000,9999),
             FName = "Clare",
             LName = "Jones",
             isPermanent = false,
@@ -44,13 +44,11 @@ public class Repository
         }
     };
 
-    public int IDCount = 3;
-
-    public void Create(string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
+    public EmployeeData Create(string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
     {
-        myEmployeeData.Add(new EmployeeData()
+        var createEmployee = new EmployeeData()
         {
-            EmployeeID = IDCount,
+            EmployeeID = rnd.Next(1000, 9999),
             FName = fname,
             LName = lname,
             isPermanent = isPerm,
@@ -58,53 +56,49 @@ public class Repository
             Bonusint = Bonus,
             DayRateint = DayRate,
             WeeksWorkedint = WeeksWorked
-        });
+        };
+        myEmployeeData.Add(createEmployee);
+        return createEmployee;
     }
 
-    public IEnumerable<object> ReadAll()
+    public IEnumerable<EmployeeData> ReadAll()
     {
-        foreach (EmployeeData dataitem in myEmployeeData)
-        {
-            yield return ("\n" + dataitem);
-        }
+        return (myEmployeeData);
     }
 
-    public object Read(int employeeID)
+    public int GetIDfromIndex(int employeeID)
     {
-        var x = myEmployeeData.Find(item => item.EmployeeID == employeeID);
+        return myEmployeeData[employeeID].EmployeeID;
+    }
+
+    public EmployeeData Read(int employeeID)
+    {
+        EmployeeData employee = myEmployeeData.First(e => e.EmployeeID == employeeID);
+        return employee;
+    }
+
+    public int Count()
+    {
+        return myEmployeeData.Count;
+    }
+
+    public EmployeeData Update(int employeeID, string fname, string lname, bool isPerm, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
+    {
+        var x = Read(employeeID);
+        x.FName = fname;
+        x.LName = lname;
+        x.isPermanent = isPerm;
+        x.Salaryint = Salary;
+        x.Bonusint = Bonus;
+        x.DayRateint = DayRate;
+        x.WeeksWorkedint = WeeksWorked;
         return x;
     }
 
-    public object ReadValues(int employeeID, string value)
-    {
-        string FName = myEmployeeData[employeeID].FName;
-        if (value == "FName") { return FName; }
-
-        string LName = myEmployeeData[employeeID].LName;
-        if (value == "LName") { return LName; }
-
-        bool isPermanent = myEmployeeData[employeeID].isPermanent;
-        if (value == "isPermanent") { return isPermanent; }
-
-        int? Salary = myEmployeeData[employeeID].Salaryint;
-        if (value == "Salary") { return Salary; }
-
-        int? Bonus = myEmployeeData[employeeID].Bonusint;
-        if (value == "Bonus") { return Bonus; }
-
-        int? DayRate = myEmployeeData[employeeID].DayRateint;
-        if (value == "DayRate") { return DayRate; }
-
-        int? WeeksWorked = myEmployeeData[employeeID].WeeksWorkedint;
-        if (value == "WeeksWorked") { return WeeksWorked; }
-
-        else { throw new Exception("Invaild Value."); }
-    }
-
-
     public bool Delete(int employeeID)
     {
-        myEmployeeData.RemoveAt(employeeID);
-        return true;
+        EmployeeData employee = myEmployeeData.FirstOrDefault(e => e.EmployeeID == employeeID);
+        if (myEmployeeData.Remove(employee)) { return true; }
+        else { return false; }        
     }
 }
