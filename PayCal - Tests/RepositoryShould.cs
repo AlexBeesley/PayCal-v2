@@ -9,7 +9,7 @@ namespace PayCal___Tests
         public void Check_Create_method_adds_data_to_list()
         {
             // Arrange
-            var sut = new Repository();
+            var sut = new PermEmployeeRepository();
 
             // Act
             sut.Create("Alex", "Beesley", true, 23000, 3000, null, null);
@@ -23,7 +23,7 @@ namespace PayCal___Tests
         public void Check_ReadAll_method_returns_all()
         {
             // Arrange
-            var sut = new Repository();
+            var sut = new PermEmployeeRepository();
 
             // Act
             var x = sut.ReadAll();
@@ -36,7 +36,7 @@ namespace PayCal___Tests
         public void Check_Read_method_returns_all_values_in_list()
         {
             // Arrange
-            var sut = new Repository();
+            var sut = new PermEmployeeRepository();
 
             // Act
             var x = sut.Read(sut.GetIDfromIndex(0));
@@ -49,7 +49,7 @@ namespace PayCal___Tests
         public void Check_Delete_method_returns_true()
         {
             // Arrange
-            var sut = new Repository();
+            var sut = new PermEmployeeRepository();
             int employeeID = sut.GetIDfromIndex(1);
 
             // Act

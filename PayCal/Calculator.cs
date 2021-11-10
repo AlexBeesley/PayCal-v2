@@ -1,30 +1,38 @@
-﻿public class Calculator
+﻿namespace PayCal
 {
-	public double AnnualPayAfterTax;
-	public double AnnualPay;
-
-	private readonly Repository re;
-
-    public Calculator(Repository repository)
+    public class Calculator
     {
-        re = repository;
+        public double AnnualPayAfterTax;
+        public double AnnualPay;
+
+        private readonly PermEmployeeRepository permRE;
+        private readonly TempEmployeeRepository tempRE;
+
+        public Calculator(PermEmployeeRepository permRepo, TempEmployeeRepository tempRepo)
+        {
+            permRE = permRepo;
+            tempRE = tempRepo;
+        }
+
+        public double CalculateEmployeePay(int employeeID)
+        {
+            try 
+            {
+                int Salary = (int)permRE.Read(employeeID).Salaryint;
+                int Bonus = (int)permRE.Read(employeeID).Bonusint;
+                AnnualPay = Salary + Bonus;
+            }
+            catch
+            {
+                int DayRate = (int)tempRE.Read(employeeID).DayRateint;
+                int WeeksWorked = (int)tempRE.Read(employeeID).WeeksWorkedint;
+                AnnualPay = (DayRate * 5) + WeeksWorked;
+            }
+
+            if (AnnualPay < 12570) { AnnualPayAfterTax = AnnualPay; }
+            if (AnnualPay > 12570) { AnnualPayAfterTax = (AnnualPay - 12570) * 0.2; }
+            return (AnnualPayAfterTax);
+        }
     }
-    public double CalculateEmployeePay(int employeeID)
-	{
-		bool EmploymentStatus = re.Read(employeeID).isPermanent;
-		if (EmploymentStatus == true)
-		{ 
-			int Salary = (int)re.Read(employeeID).Salaryint;
-			int Bonus = (int)re.Read(employeeID).Bonusint;
-			AnnualPay = Salary + Bonus;
-		}
-		else {
-			int DayRate = (int)re.Read(employeeID).DayRateint;
-			int WeeksWorked = (int)re.Read(employeeID).WeeksWorkedint;
-			AnnualPay = (DayRate * 5) + WeeksWorked;
-		}
-		if (AnnualPay < 12570) { AnnualPayAfterTax = AnnualPay; }
-		if (AnnualPay > 12570) { AnnualPayAfterTax = (AnnualPay - 12570) * 0.2; }
-		return (AnnualPayAfterTax);
-	}
 }
+

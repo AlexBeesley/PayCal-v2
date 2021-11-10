@@ -9,7 +9,7 @@ namespace PayCal___Tests
         public void Check_CalculateEmployeePay_method_returns_correct_pay()
         {
             // Arrange
-            var re = new Repository();
+            var re = new PermEmployeeRepository();
             var sut = new Calculator(re);
             double pay = 6986;
 

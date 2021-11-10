@@ -6,9 +6,12 @@ namespace PayCal
     {
         static void Main(string[] args)
         {
-            Repository re = new Repository();
-            EmployeeData ed = new EmployeeData();
-            Calculator cal = new Calculator(re);
+            PermEmployeeRepository perm = new PermEmployeeRepository();
+            PermEmployeeData permED = new PermEmployeeData();
+            TempEmployeeRepository temp = new TempEmployeeRepository();
+            TempEmployeeData tempED = new TempEmployeeData();
+            Calculator cal = new Calculator(perm, temp);
+
             int Output;
             string[] Fields = { "Enter First Name:  ", "Enter Surname:  ", "Enter Salary (if applicable):  £", "Enter Bonus (if applicable):  £",
                         "Enter Day Rate (if applicable):  £", "Enter Weeks Worked (if applicable):  " };
@@ -30,24 +33,19 @@ Pay Calculator -----------------------------------------------------------------
                 {
                     Console.Clear();
                     Console.WriteLine("EMPLOYEE INFORMATION\n");
-                    Console.WriteLine(string.Concat(re.ReadAll()));
-                    Console.WriteLine($"Number of current Employees: {re.Count()}");
+                    Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
+                    Console.WriteLine($"Total Number of current Employees: {temp.Count() + perm.Count()}");
                 }
 
                 if (Selection == "2")
                 {
                     bool NELoopComplete = false;
+                    bool permbool = false;
                     while (NELoopComplete == false)
                     {
                         Console.Clear();
                         Console.WriteLine("NEW EMPLOYEE ENTRY\n");
-                        Console.WriteLine(string.Concat(re.ReadAll()));
-
-                        Console.Write(Fields[0]);
-                        ed.FName = Console.ReadLine();
-
-                        Console.Write(Fields[1]);
-                        ed.LName = Console.ReadLine();
+                        Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
 
                         bool typeConvComplete = false;
                         while (typeConvComplete == false)
@@ -57,7 +55,13 @@ Pay Calculator -----------------------------------------------------------------
 
                             if (newIsPerm == "Y" || newIsPerm == "y")
                             {
-                                ed.isPermanent = true;
+                                permbool = true;
+                                Console.Write(Fields[0]);
+                                permED.FName = Console.ReadLine();
+
+                                Console.Write(Fields[1]);
+                                permED.LName = Console.ReadLine();
+
                                 for (int i = 2; i < 4; i++)
                                 {
                                     Console.Write(Fields[i]);
@@ -67,14 +71,12 @@ Pay Calculator -----------------------------------------------------------------
                                     {
                                         if (i == 2) //Salary
                                         {
-                                            ed.Salaryint = Output;
+                                            permED.Salaryint = Output;
                                         }
                                         if (i == 3) //Bonus
                                         {
-                                            ed.Bonusint = Output;
+                                            permED.Bonusint = Output;
                                         }
-                                        ed.DayRateint = null;
-                                        ed.WeeksWorkedint = null;
                                     }
 
                                     else
@@ -87,7 +89,12 @@ Pay Calculator -----------------------------------------------------------------
 
                             if (newIsPerm == "N" || newIsPerm == "n")
                             {
-                                ed.isPermanent = false;
+                                Console.Write(Fields[0]);
+                                tempED.FName = Console.ReadLine();
+
+                                Console.Write(Fields[1]);
+                                tempED.LName = Console.ReadLine();
+
                                 for (int i = 4; i < 6; i++)
                                 {
                                     Console.Write(Fields[i]);
@@ -97,14 +104,12 @@ Pay Calculator -----------------------------------------------------------------
                                     {
                                         if (i == 4) //Day Rate
                                         {
-                                            ed.DayRateint = Output;
+                                            tempED.DayRateint = Output;
                                         }
                                         if (i == 5) //Weeks Worked
                                         {
-                                            ed.WeeksWorkedint = Output;
+                                            tempED.WeeksWorkedint = Output;
                                         }
-                                        ed.Salaryint = null;
-                                        ed.Bonusint = null;
                                     }
                                     else
                                     {
@@ -113,9 +118,6 @@ Pay Calculator -----------------------------------------------------------------
                                 }
                                 typeConvComplete = true;
                             }
-                            
-                            Console.WriteLine($"Data to inject:  {ed.FName} / {ed.LName} / {ed.isPermanent} / {ed.Salaryint} / {ed.Bonusint} / {ed.DayRateint} / {ed.WeeksWorkedint}");
-
 
                             bool commitComplete = false;
                             bool commit = false;
@@ -127,14 +129,20 @@ Pay Calculator -----------------------------------------------------------------
                                 {
                                     commit = true;
                                     commitComplete = true;
-                                    re.Create(ed.FName, ed.LName, ed.isPermanent, ed.Salaryint, ed.Bonusint, ed.DayRateint, ed.WeeksWorkedint);
+                                    if (permbool)
+                                    {
+                                        perm.Create(permED.FName, permED.LName, permED.Salaryint, permED.Bonusint, null, null);
+                                    }
+                                    else
+                                    {
+                                        temp.Create(tempED.FName, tempED.LName, null, null, tempED.DayRateint, tempED.WeeksWorkedint);
+                                    }
                                 }
                                 if (confirm == "N" || confirm == "n")
                                 {
                                     commitComplete = true;
                                 }
                             }
-
                             if (commit == true)
                             {
                                 NELoopComplete = true;
@@ -150,20 +158,21 @@ Pay Calculator -----------------------------------------------------------------
                     {
                         Console.Clear();
                         Console.WriteLine("DELETE EMPLOYEE\n");
-                        Console.WriteLine(string.Concat(re.ReadAll()));
+                        Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
                         Console.Write("\nSelect ID of Employee to be deleted:  ");
                         string Input = Console.ReadLine();
                         bool valid = int.TryParse(Input, out Output);
                         if (valid)
                         {
                             int selectedID = Output;
-                            bool x = re.Delete(selectedID);
-                            if (x)
+                            bool x = perm.Delete(selectedID);
+                            if (!x)
                             {
-                                Console.WriteLine(string.Concat(re.ReadAll()));
-                                Console.WriteLine($"Employee with ID: {selectedID} has been deleted.");
-                                CalLoop = true;
+                                temp.Delete(selectedID);
                             }
+                            Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
+                            Console.WriteLine($"Employee with ID: {selectedID} has been deleted.");
+                            CalLoop = true;
                         }
                     }
                 }
@@ -175,16 +184,25 @@ Pay Calculator -----------------------------------------------------------------
                     {
                         Console.Clear();
                         Console.WriteLine("CALCULATE ANNUAL PAY\n");
-                        Console.WriteLine(string.Concat(re.ReadAll()));
+                        Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
                         Console.Write("\nSelect ID of Employee:  ");
                         string Input = Console.ReadLine();
                         bool valid = int.TryParse(Input, out Output);
                         if (valid)
                         {
                             int selectedID = Output;
-                            Console.WriteLine("Employee Name:  " + re.Read(selectedID).FName + " " + re.Read(selectedID).LName);
-                            Console.WriteLine("Employment Type:  " + re.Read(selectedID).isPermanent);
-                            Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
+                            try
+                            {
+                                Console.WriteLine("Employee Name:  " + perm.Read(selectedID).FName + " " + perm.Read(selectedID).LName);
+                                Console.WriteLine("Employment Type:  Permanent");
+                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Employee Name:  " + temp.Read(selectedID).FName + " " + temp.Read(selectedID).LName);
+                                Console.WriteLine("Employment Type:  Temporary");
+                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
+                            }
                         }
                         else
                         {
