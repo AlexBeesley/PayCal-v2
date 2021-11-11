@@ -6,9 +6,9 @@ namespace PayCal
     {
         static void Main(string[] args)
         {
-            PermEmployeeRepository perm = new PermEmployeeRepository();
+            IRepository<PermEmployeeData> perm = new PermEmployeeRepository();
+            IRepository<TempEmployeeData> temp = new TempEmployeeRepository();
             PermEmployeeData permED = new PermEmployeeData();
-            TempEmployeeRepository temp = new TempEmployeeRepository();
             TempEmployeeData tempED = new TempEmployeeData();
             Calculator cal = new Calculator(perm, temp);
 

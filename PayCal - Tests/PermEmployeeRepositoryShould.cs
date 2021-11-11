@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
+using PayCal;
 
 namespace PayCal___Tests
 {
     [TestFixture]
-    public class RepositoryShould
+    public class PermEmployeeRepositoryShould
     {
         [Test]
         public void Check_Create_method_adds_data_to_list()
@@ -12,8 +13,8 @@ namespace PayCal___Tests
             var sut = new PermEmployeeRepository();
 
             // Act
-            sut.Create("Alex", "Beesley", true, 23000, 3000, null, null);
-            int x = sut.GetIDfromIndex(3);
+            sut.Create("Alex", "Beesley", 23000, 3000, null, null);
+            int x = sut.GetIDfromIndex(2);
 
             // Assert
             Assert.That(sut.Read(x).FName, Is.EqualTo("Alex"));
@@ -29,7 +30,7 @@ namespace PayCal___Tests
             var x = sut.ReadAll();
 
             // Assert
-            Assert.That(string.Concat(x).Split("ID").Length, Is.EqualTo(4));
+            Assert.That(string.Concat(x).Split("ID").Length, Is.EqualTo(3));
         }
 
         [Test]
@@ -42,7 +43,7 @@ namespace PayCal___Tests
             var x = sut.Read(sut.GetIDfromIndex(0));
 
             // Assert
-            Assert.That(x.isPermanent, Is.EqualTo(true));
+            Assert.That(x.FName, Is.EqualTo("Joe"));
         }
 
         [Test]

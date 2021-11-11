@@ -8,10 +8,10 @@
         private readonly PermEmployeeRepository permRE;
         private readonly TempEmployeeRepository tempRE;
 
-        public Calculator(PermEmployeeRepository permRepo, TempEmployeeRepository tempRepo)
+        public Calculator(IRepository<PermEmployeeData> permRepo, IRepository<TempEmployeeData> tempRepo)
         {
-            permRE = permRepo;
-            tempRE = tempRepo;
+            permRE = (PermEmployeeRepository)permRepo;
+            tempRE = (TempEmployeeRepository)tempRepo;
         }
 
         public double CalculateEmployeePay(int employeeID)
