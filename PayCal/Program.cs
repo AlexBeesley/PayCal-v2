@@ -33,7 +33,7 @@ Pay Calculator -----------------------------------------------------------------
                 {
                     Console.Clear();
                     Console.WriteLine("EMPLOYEE INFORMATION\n");
-                    Console.WriteLine($"{string.Concat(perm.ReadAll())}{string.Concat(temp.ReadAll())}");
+                    Console.WriteLine($"{(string.Concat(perm.ReadAll()))}{string.Concat(temp.ReadAll())}");
                     Console.WriteLine($"Total Number of current Employees: {temp.Count() + perm.Count()}");
                 }
 
@@ -131,11 +131,11 @@ Pay Calculator -----------------------------------------------------------------
                                     commitComplete = true;
                                     if (permbool)
                                     {
-                                        perm.Create(permED.FName, permED.LName, permED.Salaryint, permED.Bonusint, null, null);
+                                        perm.Create(permED.FName, permED.LName, permED.Salaryint, permED.Bonusint);
                                     }
                                     else
                                     {
-                                        temp.Create(tempED.FName, tempED.LName, null, null, tempED.DayRateint, tempED.WeeksWorkedint);
+                                        temp.Create(tempED.FName, tempED.LName, tempED.DayRateint, tempED.WeeksWorkedint);
                                     }
                                 }
                                 if (confirm == "N" || confirm == "n")

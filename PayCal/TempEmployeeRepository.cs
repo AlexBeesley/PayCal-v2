@@ -7,21 +7,21 @@ namespace PayCal
     public class TempEmployeeRepository : IRepository<TempEmployeeData>
     {
         static Random rnd = new Random();
-        private List<TempEmployeeData> myEmployeeData = new List<TempEmployeeData>()
-    {
-        new TempEmployeeData()
+        private List<TempEmployeeData> myTempEmployeeData = new List<TempEmployeeData>()
         {
-            EmployeeID = rnd.Next(1000,9999),
-            FName = "Clare",
-            LName = "Jones",
-            DayRateint = 350,
-            WeeksWorkedint = 40
-        }
-    };
+            new TempEmployeeData()
+            {
+                EmployeeID = rnd.Next(1000,9999),
+                FName = "Clare",
+                LName = "Jones",
+                DayRateint = 350,
+                WeeksWorkedint = 40
+            }
+        };
 
-        public TempEmployeeData Create(string fname, string lname, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
+        public TempEmployeeData Create(string fname, string lname, int? DayRate, int? WeeksWorked)
         {
-            var createEmployee = new TempEmployeeData()
+            var createTempEmployeeData = new TempEmployeeData()
             {
                 EmployeeID = rnd.Next(1000, 9999),
                 FName = fname,
@@ -29,32 +29,32 @@ namespace PayCal
                 DayRateint = DayRate,
                 WeeksWorkedint = WeeksWorked
             };
-            myEmployeeData.Add(createEmployee);
-            return createEmployee;
+            myTempEmployeeData.Add(createTempEmployeeData);
+            return (createTempEmployeeData);
         }
 
         public IEnumerable<TempEmployeeData> ReadAll()
         {
-            return (myEmployeeData);
+            return myTempEmployeeData;
         }
 
         public int GetIDfromIndex(int employeeID)
         {
-            return myEmployeeData[employeeID].EmployeeID;
+            return myTempEmployeeData[employeeID].EmployeeID;
         }
 
         public TempEmployeeData Read(int employeeID)
         {
-            TempEmployeeData employee = myEmployeeData.First(e => e.EmployeeID == employeeID);
+            TempEmployeeData employee = myTempEmployeeData.First(e => e.EmployeeID == employeeID);
             return employee;
         }
 
         public int Count()
         {
-            return myEmployeeData.Count;
+            return myTempEmployeeData.Count;
         }
 
-        public TempEmployeeData Update(int employeeID, string fname, string lname, int? Salary, int? Bonus, int? DayRate, int? WeeksWorked)
+        public TempEmployeeData Update(int employeeID, string fname, string lname, int? DayRate, int? WeeksWorked)
         {
             var x = Read(employeeID);
             x.FName = fname;
@@ -66,8 +66,8 @@ namespace PayCal
 
         public bool Delete(int employeeID)
         {
-            TempEmployeeData employee = myEmployeeData.FirstOrDefault(e => e.EmployeeID == employeeID);
-            if (myEmployeeData.Remove(employee)) { return true; }
+            TempEmployeeData employee = myTempEmployeeData.FirstOrDefault(e => e.EmployeeID == employeeID);
+            if (myTempEmployeeData.Remove(employee)) { return true; }
             else { return false; }
         }
     }
