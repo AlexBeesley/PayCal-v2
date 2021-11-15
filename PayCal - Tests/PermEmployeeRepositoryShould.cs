@@ -13,8 +13,7 @@ namespace PayCal___Tests
             var sut = new PermEmployeeRepository();
 
             // Act
-            sut.Create("Alex", "Beesley", 23000, 3000);
-            int x = sut.GetIDfromIndex(2);
+            int x = sut.Create("Alex", "Beesley", 23000, 3000).EmployeeID;
 
             // Assert
             Assert.That(sut.Read(x).FName, Is.EqualTo("Alex"));
