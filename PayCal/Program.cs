@@ -195,13 +195,15 @@ Pay Calculator -----------------------------------------------------------------
                             {
                                 Console.WriteLine("Employee Name:  " + perm.Read(selectedID).FName + " " + perm.Read(selectedID).LName);
                                 Console.WriteLine("Employment Type:  Permanent");
-                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
+                                Console.WriteLine("Gross Annual Pay:  £" + cal.CalculateEmployeePay(selectedID).Item1);
+                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID).Item2);
                             }
                             catch
                             {
                                 Console.WriteLine("Employee Name:  " + temp.Read(selectedID).FName + " " + temp.Read(selectedID).LName);
                                 Console.WriteLine("Employment Type:  Temporary");
-                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID));
+                                Console.WriteLine("Gross Annual Pay:  £" + cal.CalculateEmployeePay(selectedID).Item1);
+                                Console.WriteLine("Annual Pay after Tax:  £" + cal.CalculateEmployeePay(selectedID).Item2);
                             }
                         }
                         else
